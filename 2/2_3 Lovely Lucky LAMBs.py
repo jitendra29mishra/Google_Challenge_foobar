@@ -48,69 +48,23 @@
 # If your solution passes the test cases, it will be removed from your home folder.
 
 
-# from math import log
+from math import log
 
-# def fib(total_lambs):
-#     a, b = 1, 1
-#     total_lambs -= a
-#     i = 1
-#     while b <= total_lambs:
-#         total_lambs -= b
-#         i = i + 1
-#         b, a = a + b, b
-#     return i
-
-
-# def answer(total_lambs):
-#     j = int(log(total_lambs, 2))
-#     i = fib(total_lambs)
-#     return abs(i-j)
+def fib(total_lambs):
+    a, b = 1, 1
+    total_lambs -= a
+    i = 1
+    while b <= total_lambs:
+        total_lambs -= b
+        i = i + 1
+        b, a = a + b, b
+    return i
 
 
-# def generous(total_lambs):
-#     value = 1
-#     last_item = 0
-#     current_item = 1
-#     total_lambs -= 1
-#     while total_lambs > 0:
-#         if total_lambs < current_item * 2:
-#             if total_lambs >= current_item + last_item:
-#                 value += 1
-#             break
-#         value += 1
-#         current_item, last_item = current_item * 2, current_item
-#         total_lambs -= current_item
-#     return value
-
-# def stingy(total_lambs):
-#     value = 1
-#     last_item = 0
-#     current_item = 1
-#     total_lambs -= 1
-#     while total_lambs > 0:
-#         if total_lambs < last_item + current_item:
-#             break
-#         value += 1
-#         current_item, last_item = current_item + last_item, current_item
-#         total_lambs -= current_item
-#     return value
-
-
-def generous(total_lambs):
-    value = 0
-    item = 1
-    while total_lambs >= item:
-        total_lambs -= item
-        print('total_lambs => {:3}\tvalue => {}'.format(total_lambs, item))
-        item *= 2
-        value += 1
-    return value
-
-def stingy(total_lambs):
-    value = 0
-    
 def answer(total_lambs):
-    return generous(total_lambs)
+    j = int(log(total_lambs, 2))
+    i = fib(total_lambs)
+    return abs(i-j)
 
 
 print(answer(10))
