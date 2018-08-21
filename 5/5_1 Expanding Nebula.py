@@ -54,27 +54,82 @@
 # ==========
 
 # Inputs:
-#     (boolean) g = [[true, false, true], 
-#                    [false, true, false], 
-#                    [true, false, true]]
+#     (boolean) g = [[True, False, True], 
+#                    [False, True, False], 
+#                    [True, False, True]]
 # Output:
 #     (int) 4
 
 # Inputs:
-#     (boolean) g = [[true, false, true, false, false, true,  true, true], 
-#                    [true, false, true, false, false, false, true, false], 
-#                    [true, true,  true, false, false, false, true, false], 
-#                    [true, false, true, false, false, false, true, false], 
-#                    [true, false, true, false, false, true,  true, true]]
+#     (boolean) g = [[True, False, True, False, False, True,  True, True], 
+#                    [True, False, True, False, False, False, True, False], 
+#                    [True, True,  True, False, False, False, True, False], 
+#                    [True, False, True, False, False, False, True, False], 
+#                    [True, False, True, False, False, True,  True, True]]
 # Output:
 #     (int) 254
 
 # Inputs:
-#     (boolean) g = [[true,  true, false, true,  false, true,  false, true,  true,  false], 
-#                    [true,  true, false, false, false, false, true,  true,  true,  false], 
-#                    [true,  true, false, false, false, false, false, false, false, true], 
-#                    [false, true, false, false, false, false, true,  true,  false, false]]
+#     (boolean) g = [[True,  True, False, True,  False, True,  False, True,  True,  False], 
+#                    [True,  True, False, False, False, False, True,  True,  True,  False], 
+#                    [True,  True, False, False, False, False, False, False, False, True], 
+#                    [False, True, False, False, False, False, True,  True,  False, False]]
 # Output:
 #     (int) 11567
 
 # Use verify [file] to test your solution and see how it does. When you are finished editing your code, use submit [file] to submit your answer. If your solution passes the test cases, it will be removed from your home folder.
+
+
+from collections import defaultdict
+
+def gen_function(x, y, z):
+    z = ~(2**z)
+    a = x & z
+    b = y & z
+    c = x >> 1
+    d = y >> 1
+    return (a&~b&~c&~d) | (~a&b&~c&~d) | (~a&~b&c&~d) | (~a&~b&~c&d)
+
+def matrix(n, nums):
+    dict_map = defaultdict(set)
+    nums = set(nums)
+    rn = 2**(n+1)
+    for i in range(rn):
+        for j in range(rn):
+            generation = gen_function(i,j,n)
+            if generation in nums:
+                dict_map[(generation, i)].add(j)
+    return dict_map
+
+def answer(g):
+    g = list(zip(*g))
+    ncols = len(g[0])
+
+    nums = [sum([2**i if col else 0 for i, col in enumerate(row)]) for row in g]
+    matrix_map = matrix(ncols, nums)
+
+    pre_image = {i: 1 for i in range(2**(ncols+1))}
+    for row in nums:
+        next_row = defaultdict(int)
+        for c1 in pre_image:
+            for c2 in matrix_map[(row, c1)]:
+                next_row[c2] += pre_image[c1]
+        pre_image = next_row
+
+    return sum(pre_image.values())
+
+g = [[True, False, True], [False, True, False], [True, False, True]]
+assert answer(g) == 4
+
+g = [[True, False, True, False, False, True,  True, True], 
+    [True, False, True, False, False, False, True, False], 
+    [True, True,  True, False, False, False, True, False], 
+    [True, False, True, False, False, False, True, False], 
+    [True, False, True, False, False, True,  True, True]]
+assert answer(g) == 254
+
+g = [[True,  True, False, True,  False, True,  False, True,  True,  False], 
+    [True,  True, False, False, False, False, True,  True,  True,  False], 
+    [True,  True, False, False, False, False, False, False, False, True], 
+    [False, True, False, False, False, False, True,  True,  False, False]]
+assert answer(g) == 11567
