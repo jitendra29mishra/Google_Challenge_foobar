@@ -53,6 +53,6 @@ def answer(l):
         i+=1
     return res
 
-print(answer([1,2,3,4,5,6]))
-print(answer([1,1,1]))
-print(answer([1,2,3,5,7,11]))
+assert answer([1,2,3,4,5,6])==3
+assert answer([1,1,1])==1
+assert answer([1,2,3,5,7,11])==0
